@@ -25,8 +25,8 @@
 
         {% elif campo.field.widget.input_type == 'date' %}
         <input type="text" class="form-control" name="{{ campo.name }}"
-        id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}"
-        pattern="\d{4}-\d{2}-\d{2}" title="Formato: YYYY-MM-DD" />
+               id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | date:'d/m/Y' }}"
+               pattern="\d{2}/\d{2}/\d{4}" title="Formato: DD/MM/YYYY" />
 
         {% elif campo.field.widget.input_type == 'file' %}
         <input type="file" class="form-control" name="{{ campo.name }}"

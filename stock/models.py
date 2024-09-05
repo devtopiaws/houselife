@@ -11,7 +11,10 @@ class Product(models.Model):
     image = models.ImageField(upload_to='images/', verbose_name='Imagen', null=True, blank=True)
     date = models.DateField(verbose_name='Fecha', null=True, blank=True)
     
-
+    price_sell = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio Venta', null=True, blank=True)
+    cod_supplier = models.CharField(max_length=100, verbose_name='Codigo Proveedor', null=True)
+    supplier = models.CharField(max_length=100, verbose_name='Nombre Proveedor', null=True)
+    
                     
     def __str__(self):
         fila = "Nombre: "+ self.name + " - " + "Descripción:" + self.description

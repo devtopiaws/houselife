@@ -36,6 +36,9 @@
                             <th>Nombre</th>
                             <th>Descripción</th>
                             <th>Precio</th>
+                            <th>Precio Venta</th> <!-- Nueva columna -->
+                            <th>Codigo Proveedor</th> <!-- Nueva columna -->
+                            <th>Nombre Proveedor</th> <!-- Nueva columna -->
                             <th>Stock</th>
                             <th>Categoría</th>
                             <th>Imagen</th>
@@ -50,12 +53,15 @@
                             <td>{{ product.name }}</td>
                             <td>{{ product.description }}</td>
                             <td>${{ product.price }}</td>
+                            <td>${{ product.price_sell }}</td> <!-- Nueva columna -->
+                            <td>{{ product.cod_supplier }}</td> <!-- Nueva columna -->
+                            <td>{{ product.supplier }}</td> <!-- Nueva columna -->
                             <td>{{ product.stock }}</td>
                             <td>{{ product.category }}</td>
                             <td>
                                 <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
                             </td>
-                            <td>{{ product.date }}</td>
+                            <td>{{ product.date|date:"d/m/Y" }}</td>
                             <td>
                                 <div class="d-flex gap-2">
                                     <a class="btn btn-info btn-sm" href="{% url 'edit' product.id %}" role="button">
