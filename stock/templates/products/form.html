@@ -1,0 +1,54 @@
+<form enctype="multipart/form-data" method="post" class="container mt-4">
+    {% csrf_token %}
+
+    {% for campo in formulary %}
+    <div class="mb-3">
+        <label for="{{ campo.name }}" class="form-label">{{ campo.label }}:</label>
+
+        {% if campo.field.widget.input_type == 'file' and campo.value %}
+        <div class="mb-2">
+            <img src="{{ MEDIA_URL }}/images/{{ campo.value }}" alt="{{ campo.label }}" class="img-thumbnail" style="max-width: 150px;">
+        </div>
+        {% endif %}
+
+        {% if campo.field.widget.input_type == 'text' %}
+        <input type="text" class="form-control" name="{{ campo.name }}"
+            id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
+
+        {% elif campo.field.widget.input_type == 'number' %}
+        <input type="number" class="form-control" name="{{ campo.name }}"
+            id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
+
+        {% elif campo.field.widget.input_type == 'email' %}
+        <input type="email" class="form-control" name="{{ campo.name }}"
+            id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
+
+        {% elif campo.field.widget.input_type == 'date' %}
+        <input type="text" class="form-control" name="{{ campo.name }}"
+        id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}"
+        pattern="\d{4}-\d{2}-\d{2}" title="Formato: YYYY-MM-DD" />
+
+        {% elif campo.field.widget.input_type == 'file' %}
+        <input type="file" class="form-control" name="{{ campo.name }}"
+            id="{{ campo.name }}" />
+
+        {% elif campo.field.widget.input_type == 'textarea' %}
+        <textarea class="form-control" name="{{ campo.name }}" id="{{ campo.name }}" rows="3" placeholder="{{ campo.label }}">{{ campo.value | default:'' }}</textarea>
+
+        {% else %}
+        <input type="text" class="form-control" name="{{ campo.name }}"
+            id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
+
+        {% endif %}
+
+        {% if campo.errors %}
+        <div class="form-text text-danger mt-1">{{ campo.errors }}</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="text-end mt-3">
+        <button class="btn btn-success" type="submit">Enviar información</button>
+        <a class="btn btn-secondary ms-2" href="{% url 'products' %}" role="button">Cancelar</a>
+    </div>
+</form>

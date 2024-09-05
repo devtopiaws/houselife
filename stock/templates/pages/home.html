@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Inventario HouseLife{% endblock %}
+
+{% block content %} 
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="col-10 col-md-8 col-lg-6">
+        <div class="h-80 p-5 bg-white border rounded-3 shadow">
+            <h2 class="text-center text-primary mb-4">Bienvenidos al inventario de HouseLife</h2>
+            <p class="lead text-center mb-4">
+                Gestiona y agrega productos a tu colección de manera fácil y rápida.
+            </p>
+            <div class="d-flex justify-content-center">
+                <a
+                    class="btn btn-primary text-white"
+                    href="{% url 'products' %}"
+                    aria-label="Empezar a agregar productos"
+                >
+                    Empezar a agregar productos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
