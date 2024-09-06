@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Product
 from .forms import ProductForm  
+from django.db.models import Q
 
 # Vista para la página de inicio
 def home(request):
@@ -15,7 +16,16 @@ def about(request):
 def products(request):
     query = request.GET.get('q')
     if query:
-        products = Product.objects.filter(name__icontains=query)
+        products = Product.objects.filter(
+            Q(name__icontains=query) | 
+            Q(description__icontains=query) |
+            Q(price__icontains=query) |
+            Q(price_sell__icontains=query) |
+            Q(cod_supplier__icontains=query) |
+            Q(supplier__icontains=query) |
+            Q(stock__icontains=query) |
+            Q(category__icontains=query)
+        )
     else:
         products = Product.objects.all()
     return render(request, 'products/index.html', {'products': products})
