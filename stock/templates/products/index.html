@@ -33,14 +33,18 @@
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
+                            <th>Codigo Proveedor</th> 
+                            <th>Nombre Proveedor</th> 
                             <th>Nombre</th>
                             <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Precio Venta</th> <!-- Nueva columna -->
-                            <th>Codigo Proveedor</th> <!-- Nueva columna -->
-                            <th>Nombre Proveedor</th> <!-- Nueva columna -->
+                            <th>Precio Compra</th>
+                            <th>Precio Venta</th> 
+                            <th>Precio del mercado</th>
+                            <th>Link</th>
                             <th>Stock</th>
                             <th>Categoría</th>
+                            <th>Sub Categoría</th>
+                            <th>Ubicación del producto</th>
                             <th>Imagen</th>
                             <th>Fecha de creación</th>
                             <th>Acciones</th>
@@ -50,14 +54,18 @@
                         {% for product in products %}
                         <tr>
                             <td>{{ product.id }}</td>
+                            <td>{{ product.cod_supplier }}</td> 
+                            <td>{{ product.supplier }}</td> 
                             <td>{{ product.name }}</td>
                             <td>{{ product.description }}</td>
                             <td>${{ product.price }}</td>
-                            <td>${{ product.price_sell }}</td> <!-- Nueva columna -->
-                            <td>{{ product.cod_supplier }}</td> <!-- Nueva columna -->
-                            <td>{{ product.supplier }}</td> <!-- Nueva columna -->
+                            <td>${{ product.price_sell }}</td> 
+                            <td>${{product.market_price }}</td>
+                            <td>{{ product.link }}</td>
                             <td>{{ product.stock }}</td>
                             <td>{{ product.category }}</td>
+                            <td>{{ product.subcategory }}</td>
+                            <td>{{ product.location }}</td>
                             <td>
                                 <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
                             </td>
