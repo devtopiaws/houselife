@@ -1,7 +1,7 @@
 <form enctype="multipart/form-data" method="post" class="container mt-4">
     {% csrf_token %}
 
-    {% for campo in formulary %}
+    {% for campo in form %}
     <div class="mb-3">
         <label for="{{ campo.name }}" class="form-label">{{ campo.label }}:</label>
 

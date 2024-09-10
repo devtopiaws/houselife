@@ -38,12 +38,18 @@ def edit_customer(request, id):
         form = CustomerForm(request.POST, instance=customer)
         if form.is_valid():
             form.save()
-            return redirect('customer')  # Redirige a la lista de clientes
+            return redirect('customer')
     else:
         form = CustomerForm(instance=customer)
 
     return render(request, 'customers/edit.html', {'form': form, 'customer': customer})
 
+
+# Vista para eliminar un cliente
+def delete_customer(request, id):
+    customer = get_object_or_404(Customer, id=id)
+    customer.delete()
+    return redirect('customer')
 
 # Vista para listar todos los productos con filtro de búsqueda
 def products(request):

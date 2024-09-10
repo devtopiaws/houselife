@@ -1,24 +1,20 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %} Crear nuevo cliente {% endblock %}
+{% block title %} Agregar nuevo cliente {% endblock %}
 
-{% block content %}
+{% block content %} 
 
 <div class="card">
     <div class="card-header">
-        Crear un Cliente
+        Crear un cliente nuevo
     </div>
     <div class="card-body">
         <h4 class="card-title">Datos del cliente</h4>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Crear Cliente</button>
-        </form>
+        
+        {% include 'customers/form.html' %}
+        
     </div>
-    <div class="card-footer text-muted">
-        &copy; {{ current_year }} HouseLife
-    </div>
+    <div class="card-footer text-muted"></div>
 </div>
 
 {% endblock %}
