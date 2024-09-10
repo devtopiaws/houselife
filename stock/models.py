@@ -1,6 +1,20 @@
 from django.db import models
 
 # Create your models here.
+class Customer(models.Model):
+    id = models.AutoField(primary_key=True)
+    first_name = models.CharField(max_length=100, verbose_name='Nombre')
+    last_name = models.CharField(max_length=100, verbose_name='Apellido')
+    email = models.EmailField(unique=True, verbose_name='Correo Electrónico')
+    phone = models.CharField(max_length=15, verbose_name='Teléfono', null=True, blank=True)
+    address = models.TextField(verbose_name='Dirección', null=True, blank=True)
+    city = models.CharField(max_length=100, verbose_name='Ciudad', null=True, blank=True)
+    country = models.CharField(max_length=100, verbose_name='País', null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de Registro')
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.email}"
+
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
     cod_supplier = models.CharField(max_length=100, verbose_name='Codigo Proveedor', null=True)
@@ -17,9 +31,6 @@ class Product(models.Model):
     image = models.ImageField(upload_to='images/', verbose_name='Imagen', null=True, blank=True)
     date = models.DateField(verbose_name='Fecha', null=True, blank=True)
     location = models.CharField(max_length=100, verbose_name='Ubicación',null=True, blank=True)
-
-
-    
                     
     def __str__(self):
         fila = "Nombre: "+ self.name + " - " + "Descripción:" + self.description

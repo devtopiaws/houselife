@@ -1,5 +1,10 @@
 from django import forms
-from .models import Product
+from .models import Product, Customer
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'city', 'country']
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -13,3 +18,5 @@ class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.fields['date'].input_formats = ['%d/%m/%Y']
+
+
