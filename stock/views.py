@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Product, Customer
 from .forms import ProductForm, CustomerForm
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 # Vista para la página de inicio
 def home(request):
@@ -14,8 +15,27 @@ def about(request):
 
 # Vista para clientes
 def customer(request):
-    customers = Customer.objects.all()
-    return render(request, 'customers/index.html', {'customers': customers})
+    query = request.GET.get('q')
+    if query:
+        customers = Customer.objects.filter(
+            Q(first_name__icontains=query) | 
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(address__icontains=query) |
+            Q(city__icontains=query) |
+            Q(country__icontains=query) |
+            Q(date_created__icontains=query)
+        )
+    else:
+        customers = Customer.objects.all()
+
+    # Agregar paginación
+    paginator = Paginator(customers, 10)  # 5 clientes por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'customers/index.html', {'page_obj': page_obj, 'query': query})
 
 
 # Vista para crear un nuevo producto
@@ -51,7 +71,7 @@ def delete_customer(request, id):
     customer.delete()
     return redirect('customer')
 
-# Vista para listar todos los productos con filtro de búsqueda
+# Vista para listar todos los productos con filtro de búsqueda y paginación
 def products(request):
     query = request.GET.get('q')
     if query:
@@ -60,6 +80,7 @@ def products(request):
             Q(description__icontains=query) |
             Q(price__icontains=query) |
             Q(price_sell__icontains=query) |
+            Q(market_price__icontains=query) |
             Q(cod_supplier__icontains=query) |
             Q(supplier__icontains=query) |
             Q(stock__icontains=query) |
@@ -67,7 +88,13 @@ def products(request):
         )
     else:
         products = Product.objects.all()
-    return render(request, 'products/index.html', {'products': products})
+    
+    # Agregar paginación
+    paginator = Paginator(products, 5)  # 10 productos por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'products/index.html', {'page_obj': page_obj, 'query': query})
 
 # Vista para crear un nuevo producto
 def create(request):
