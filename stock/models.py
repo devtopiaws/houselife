@@ -12,8 +12,6 @@ class Customer(models.Model):
     country = models.CharField(max_length=100, verbose_name='País', null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de Registro')
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.email}"
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
