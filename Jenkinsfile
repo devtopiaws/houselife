@@ -22,14 +22,14 @@ pipeline {
         stage("Build") {
             steps {
                 script {
-                    sh "docker-compose build"
+                    sh "docker compose build"
                 }
             }
         }
 
         stage("Deploy") {
             steps {
-                sh "docker-compose --env-file ${path_env_file}/.env up -d"
+                sh "docker compose --env-file ${path_env_file}/.env up -d"
             }
         }
     }
