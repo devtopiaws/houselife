@@ -18,7 +18,11 @@ urlpatterns = [
     path('customers/create/', views.create_customer, name='create_customer'),
     path('customers/edit/<int:id>/', views.edit_customer, name='edit_customer'),
     path('customers/delete/<int:id>/', views.delete_customer, name='delete_customer'),
-    
+    path('suppliers/', views.supplier, name='supplier'),
+    path('suppliers/create/', views.create_supplier, name='create_supplier'),
+    path('suppliers/edit/<int:id>/', views.edit_supplier, name='edit_supplier'),
+    path('suppliers/delete/<int:id>/', views.delete_supplier, name='delete_supplier'),
+
 
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

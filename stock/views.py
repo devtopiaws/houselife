@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Product, Customer
-from .forms import ProductForm, CustomerForm
+from .models import Product, Customer, Supplier
+from .forms import ProductForm, CustomerForm, SupplierForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 
@@ -12,6 +12,77 @@ def home(request):
 # Vista para vista nosotros
 def about(request):
     return render(request,'pages/about.html')
+
+# Vista para Proveedores
+def supplier(request):
+    query = request.GET.get('q')
+    if query:
+        suppliers = Supplier.objects.filter(
+            Q(name__icontains=query) | 
+            Q(address__icontains=query) |
+            Q(city__icontains=query) |
+            Q(country__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(email__icontains=query)  # Sin coma al final
+        )
+    else:
+        suppliers = Supplier.objects.all()
+
+    # Agregar paginación
+    paginator = Paginator(suppliers, 10)  # 10 proveedores por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'suppliers/index.html', {'page_obj': page_obj, 'query': query})
+
+
+
+# Vista para crear un nuevo producto
+def create_supplier(request):
+    if request.method == 'POST':
+        form = SupplierForm(request.POST)
+        if form.is_valid():
+            form.save()  # Guarda el proveedor
+            return redirect('supplier')  # Redirige a la lista de proveedor u otra vista
+    else:
+        form = SupplierForm()
+    
+    return render(request, 'suppliers/create.html', {'form': form})
+
+# Vista para editar un proveedor existente
+def edit_supplier(request, id):
+    supplier = get_object_or_404(Supplier, id=id)
+
+    if request.method == 'POST':
+        form = SupplierForm(request.POST, instance=supplier)
+        if form.is_valid():
+            form.save()
+            return redirect('supplier')
+    else:
+        form = SupplierForm(instance=supplier)
+
+    return render(request, 'suppliers/edit.html', {'form': form, 'supplier': supplier})
+
+
+# Vista para eliminar un proveedor
+def delete_supplier(request, id):
+    supplier = get_object_or_404(Supplier, id=id)
+    supplier.delete()
+    return redirect('supplier')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Vista para clientes
 def customer(request):

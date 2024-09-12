@@ -1,6 +1,16 @@
 from django.db import models
 
 # Create your models here.
+class Supplier(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, verbose_name='Nombre')
+    address = models.TextField(verbose_name='Dirección', null=True, blank=True)
+    city = models.CharField(max_length=100, verbose_name='Ciudad', null=True, blank=True)
+    country = models.CharField(max_length=100, verbose_name='País', null=True, blank=True)
+    phone = models.CharField(max_length=15, verbose_name='Teléfono', null=True, blank=True)
+    email = models.EmailField(unique=True, verbose_name='Correo Electrónico')
+
+
 class Customer(models.Model):
     id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=100, verbose_name='Nombre')
