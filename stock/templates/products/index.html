@@ -29,58 +29,6 @@
                 </div>
             </form>
             <!-- Fin del formulario de búsqueda -->
-            
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Codigo Proveedor</th>
-                            <th>Nombre Proveedor</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio Compra</th>
-                            <th>Precio Venta</th>
-                            <th>Stock</th>
-                            <th>Categoría</th>
-                            <th>Ubicación</th>
-                            <th>Imagen</th>
-                            <th>Fecha de creación</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for product in page_obj %}
-                        <tr>
-                            <td>{{ product.id }}</td>
-                            <td>{{ product.cod_supplier }}</td>
-                            <td>{{ product.supplier }}</td>
-                            <td>{{ product.name }}</td>
-                            <td>{{ product.description }}</td>
-                            <td>${{ product.price }}</td>
-                            <td>${{ product.price_sell }}</td>
-                            <td>{{ product.stock }}</td>
-                            <td>{{ product.category }}</td>
-                            <td>{{ product.location }}</td>
-                            <td>
-                                <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
-                            </td>
-                            <td>{{ product.date|date:"d/m/Y" }}</td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <a class="btn btn-info btn-sm" href="{% url 'edit' product.id %}" role="button">Editar</a>
-                                    <a class="btn btn-danger btn-sm" href="{% url 'delete' product.id %}" role="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Borrar</a>
-                                </div>
-                            </td>                            
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="13" class="text-center">No hay productos disponibles</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
 
             <!-- Controles de paginación -->
             <nav aria-label="Paginación de productos">
@@ -109,6 +57,62 @@
                 </ul>
             </nav>
             <!-- Fin de los controles de paginación -->
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Codigo Proveedor</th>
+                            <th>Nombre Proveedor</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio Compra</th>
+                            <th>Precio Venta</th>
+                            <th>Precio Cliente</th>
+                            <th>Stock</th>
+                            <th>Categoría</th>
+                            <th>Ubicación</th>
+                            <th>Imagen</th>
+                            <th>Fecha de creación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in page_obj %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.cod_supplier }}</td>
+                            <td>{{ product.supplier }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.description }}</td>
+                            <td>${{ product.price }}</td>
+                            <td>${{ product.price_sell }}</td>
+                            <td>${{ product.market_price }}
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.category }}</td>
+                            <td>{{ product.location }}</td>
+                            <td>
+                                <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
+                            </td>
+                            <td>{{ product.date|date:"d/m/Y" }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-info btn-sm" href="{% url 'edit' product.id %}" role="button">Editar</a>
+                                    <a class="btn btn-danger btn-sm" href="{% url 'delete' product.id %}" role="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Borrar</a>
+                                </div>
+                            </td>                            
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="13" class="text-center">No hay productos disponibles</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            
 
         </div>
         <div class="card-footer text-muted text-center">

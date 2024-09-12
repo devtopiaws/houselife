@@ -90,7 +90,7 @@ def products(request):
         products = Product.objects.all()
     
     # Agregar paginación
-    paginator = Paginator(products, 5)  # 10 productos por página
+    paginator = Paginator(products, 10)  # 10 productos por página
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
