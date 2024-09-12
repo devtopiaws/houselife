@@ -1,0 +1,5 @@
+django
+pymysql
+pillow
+cryptography
+python-dotenv
