@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %} Agregar nuevo estudio de mercado {% endblock %}
+
+{% block content %} 
+
+<div class="card">
+    <div class="card-header">
+        Crear un estudio de mercado
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Datos del estudio de mercado</h4>
+        
+        {% include 'studies/form.html' %}
+        
+    </div>
+    <div class="card-footer text-muted"></div>
+</div>
+
+{% endblock %}

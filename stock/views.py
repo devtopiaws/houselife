@@ -1,17 +1,72 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Product, Customer, Supplier
-from .forms import ProductForm, CustomerForm, SupplierForm
+from .models import Product, Customer, Supplier, MarketStudy
+from .forms import ProductForm, CustomerForm, SupplierForm, MarketStudyForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 
 # Vista para la página de inicio
+
 def home(request):
     return render(request, 'pages/home.html')
 
 # Vista para vista nosotros
 def about(request):
     return render(request,'pages/about.html')
+
+
+# Listado de estudios de mercado con búsqueda y paginación
+def study(request):
+    query = request.GET.get('q', '')
+    if query:
+        studies = MarketStudy.objects.filter(product__name__icontains=query)
+    else:
+        studies = MarketStudy.objects.all() 
+
+
+    # Agregar paginación
+    paginator = Paginator(studies, 10)  # 10 estudios de mercado por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'studies/index.html', {'page_obj': page_obj, 'query': query})
+
+# Crear un nuevo estudio de mercado
+def create_study(request):
+    if request.method == 'POST':
+        form = MarketStudyForm(request.POST)
+        if form.is_valid():
+            # Guardar el estudio de mercado
+            study = form.save(commit=False)
+            # Aquí puedes agregar lógica adicional antes de guardar, como cálculos de IVA o transporte
+            study.save()
+            return redirect('study')
+    else:
+        form = MarketStudyForm()
+    
+    return render(request, 'studies/create.html', {'form': form})
+
+# Editar un estudio de mercado existente
+def edit_study(request, id):
+    study = get_object_or_404(MarketStudy, id=id)
+
+    if request.method == 'POST':
+        form = MarketStudyForm(request.POST, instance=study)
+        if form.is_valid():
+            form.save()
+            return redirect('study')
+    else:
+        form = MarketStudyForm(instance=study)
+
+    return render(request, 'studies/edit.html', {'form': form, 'study': study})
+
+# Eliminar un estudio de mercado
+def delete_study(request, id):
+    study = get_object_or_404(MarketStudy, id=id)
+    study.delete()
+    return redirect('study')
+
 
 # Vista para Proveedores
 def supplier(request):

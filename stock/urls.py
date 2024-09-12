@@ -22,7 +22,10 @@ urlpatterns = [
     path('suppliers/create/', views.create_supplier, name='create_supplier'),
     path('suppliers/edit/<int:id>/', views.edit_supplier, name='edit_supplier'),
     path('suppliers/delete/<int:id>/', views.delete_supplier, name='delete_supplier'),
-
+    path('studies/', views.study, name='study'),  
+    path('studies/create/', views.create_study, name='create_study'),
+    path('studies/<int:id>/edit/', views.edit_study, name='edit_study'),
+    path('studies/<int:id>/delete/', views.delete_study, name='delete_study'),
 
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
