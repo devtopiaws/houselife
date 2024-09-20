@@ -5,7 +5,9 @@ from .models import Product, Customer, Supplier, MarketStudy
 from .forms import ProductForm, CustomerForm, SupplierForm, MarketStudyForm
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
+@login_required
 # Vista para la página de inicio
 
 def home(request):
