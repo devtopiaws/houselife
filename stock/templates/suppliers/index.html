@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %} Lista de productos {% endblock %}
+{% block title %} Lista de Proveedores {% endblock %}
 
-{% block content %} 
-
-<div class="container-fluid mt-4">
+{% block content %}
+<div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Lista de Productos</h5>
-            <a class="btn btn-primary" href="{% url 'create' %}" role="button">
+            <h5 class="card-title mb-0">Lista de Proveedores</h5>
+            <a class="btn btn-primary" href="{% url 'create_supplier' %}" role="button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                </svg> Agregar nuevo producto
+                </svg> Agregar nuevo proveedor
             </a>
         </div>
         <div class="card-body">
+            <!-- Formulario de búsqueda -->
             <form method="GET" class="mb-4">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Buscar producto..." value="{{ request.GET.q }}">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar proveedor..." value="{{ request.GET.q }}">
                     <button class="btn btn-outline-secondary" type="submit">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -26,7 +26,8 @@
                     </button>
                 </div>
             </form>
-
+            <!-- Fin del formulario de búsqueda -->
+            <!-- Controles de paginación -->
             <nav aria-label="Paginación de productos">
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
@@ -52,66 +53,57 @@
                     {% endif %}
                 </ul>
             </nav>
-
+            <!-- Fin de los controles de paginación -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover w-100">
+                <table class="table table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
-                            <th>Codigo Proveedor</th>
-                            <th>Nombre Proveedor</th>
                             <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio Compra</th>
-                            <th>Precio Venta</th>
-                            <th>Precio Cliente</th>
-                            <th>Stock</th>
-                            <th>Categoría</th>
-                            <th>Ubicación</th>
-                            <th>Imagen</th>
-                            <th>Fecha de creación</th>
+                            <th>Dirección</th>
+                            <th>Ciudad</th>
+                            <th>País</th>
+                            <th>Teléfono</th>
+                            <th>Correo Electrónico</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for product in page_obj %}
+                        {% for supplier in page_obj %}
                         <tr>
-                            <td>{{ product.id }}</td>
-                            <td>{{ product.cod_supplier }}</td>
-                            <td>{{ product.supplier }}</td>
-                            <td>{{ product.name }}</td>
-                            <td>{{ product.description }}</td>
-                            <td>${{ product.price }}</td>
-                            <td>${{ product.price_sell }}</td>
-                            <td>${{ product.market_price }}</td>
-                            <td>{{ product.stock }}</td>
-                            <td>{{ product.category }}</td>
-                            <td>{{ product.location }}</td>
-                            <td>
-                                <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
-                            </td>
-                            <td>{{ product.date|date:"d/m/Y" }}</td>
+                            <td>{{ supplier.id }}</td>
+                            <td>{{ supplier.name }} {{ supplier.last_name }}</td>
+                            <td>{{ supplier.email }}</td>
+                            <td>{{ supplier.phone }}</td>
+                            <td>{{ supplier.address }}</td>
+                            <td>{{ supplier.city }}</td>
+                            <td>{{ supplier.country }}</td>
                             <td>
                                 <div class="d-flex gap-2">
-                                    <a class="btn btn-info btn-sm" href="{% url 'edit' product.id %}" role="button">Editar</a>
-                                    <a class="btn btn-danger btn-sm" href="{% url 'delete' product.id %}" role="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Borrar</a>
+                                    <a class="btn btn-info btn-sm" href="{% url 'edit_supplier' supplier.id %}" role="button">
+                                        <!-- Icono de editar -->
+                                        Editar
+                                    </a>
+                                    <a class="btn btn-danger btn-sm" href="{% url 'delete_supplier' supplier.id %}" role="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este proveedor?');">
+                                        <!-- Icono de borrar -->
+                                        Borrar
+                                    </a>
                                 </div>
-                            </td>                            
+                            </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="13" class="text-center">No hay productos disponibles</td>
+                            <td colspan="9" class="text-center">No hay clientes disponibles</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-
         </div>
         <div class="card-footer text-muted text-center">
             &copy; {{ current_year }} HouseLife
         </div>
     </div>
+    <br>
 </div>
-
 {% endblock %}
