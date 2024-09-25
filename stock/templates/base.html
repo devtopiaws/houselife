@@ -47,18 +47,30 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' %}">Nosotros</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'products' %}">Productos</a>
-                    </li>
-                    <li class="nav-item"></li>
-                        <a class="nav-link" href="{% url 'customer' %}">Clientes</a>
-                    </li>
-                    <li class="nav-item"></li>
-                        <a class="nav-link" href="{% url 'supplier' %}">Proveedores</a>
-                    </li>
-                    <li class="nav-item"></li>
-                        <a class="nav-link" href="{% url 'study' %}">Estudio de mercado</a>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'products' %}">Productos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'customer' %}">Clientes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'supplier' %}">Proveedores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'study' %}">Estudio de mercado</a>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link" style="background:none; border:none; color: inherit; cursor:pointer;">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

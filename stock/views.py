@@ -5,6 +5,27 @@ from .models import Product, Customer, Supplier, MarketStudy
 from .forms import ProductForm, CustomerForm, SupplierForm, MarketStudyForm
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib.auth import login
+from .forms import SignUpForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+
+class VistaProtegida(LoginRequiredMixin, TemplateView):
+    template_name = 'login.html'
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Loguea al usuario automáticamente tras el registro
+            return redirect('/')
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
+
 
 # Vista para la página de inicio
 
@@ -17,6 +38,7 @@ def about(request):
 
 
 # Listado de estudios de mercado con búsqueda y paginación
+@login_required
 def study(request):
     query = request.GET.get('q', '')
     if query:
@@ -33,6 +55,7 @@ def study(request):
     return render(request, 'studies/index.html', {'page_obj': page_obj, 'query': query})
 
 # Crear un nuevo estudio de mercado
+@login_required
 def create_study(request):
     if request.method == 'POST':
         form = MarketStudyForm(request.POST)
@@ -48,6 +71,7 @@ def create_study(request):
     return render(request, 'studies/create.html', {'form': form})
 
 # Editar un estudio de mercado existente
+@login_required
 def edit_study(request, id):
     study = get_object_or_404(MarketStudy, id=id)
 
@@ -62,6 +86,7 @@ def edit_study(request, id):
     return render(request, 'studies/edit.html', {'form': form, 'study': study})
 
 # Eliminar un estudio de mercado
+@login_required
 def delete_study(request, id):
     study = get_object_or_404(MarketStudy, id=id)
     study.delete()
@@ -69,6 +94,7 @@ def delete_study(request, id):
 
 
 # Vista para Proveedores
+@login_required
 def supplier(request):
     query = request.GET.get('q')
     if query:
@@ -93,6 +119,7 @@ def supplier(request):
 
 
 # Vista para crear un nuevo producto
+@login_required
 def create_supplier(request):
     if request.method == 'POST':
         form = SupplierForm(request.POST)
@@ -105,6 +132,7 @@ def create_supplier(request):
     return render(request, 'suppliers/create.html', {'form': form})
 
 # Vista para editar un proveedor existente
+@login_required
 def edit_supplier(request, id):
     supplier = get_object_or_404(Supplier, id=id)
 
@@ -120,6 +148,7 @@ def edit_supplier(request, id):
 
 
 # Vista para eliminar un proveedor
+@login_required
 def delete_supplier(request, id):
     supplier = get_object_or_404(Supplier, id=id)
     supplier.delete()
@@ -128,18 +157,8 @@ def delete_supplier(request, id):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # Vista para clientes
+@login_required
 def customer(request):
     query = request.GET.get('q')
     if query:
@@ -165,6 +184,7 @@ def customer(request):
 
 
 # Vista para crear un nuevo producto
+@login_required
 def create_customer(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
@@ -177,6 +197,7 @@ def create_customer(request):
     return render(request, 'customers/create.html', {'form': form})
 
 # Vista para editar un cliente existente
+@login_required
 def edit_customer(request, id):
     customer = get_object_or_404(Customer, id=id)
 
@@ -192,12 +213,14 @@ def edit_customer(request, id):
 
 
 # Vista para eliminar un cliente
+@login_required
 def delete_customer(request, id):
     customer = get_object_or_404(Customer, id=id)
     customer.delete()
     return redirect('customer')
 
 # Vista para listar todos los productos con filtro de búsqueda y paginación
+@login_required
 def products(request):
     query = request.GET.get('q')
     if query:
@@ -223,6 +246,7 @@ def products(request):
     return render(request, 'products/index.html', {'page_obj': page_obj, 'query': query})
 
 # Vista para crear un nuevo producto
+@login_required
 def create(request):
     formulary = ProductForm(request.POST or None, request.FILES or None)
     if formulary.is_valid():
@@ -231,6 +255,7 @@ def create(request):
     return render(request, 'products/create.html', {'formulary': formulary})
 
 # Vista para editar un producto existente
+@login_required
 def edit(request, id):
     product = Product.objects.get(id=id)
     formulary = ProductForm(request.POST or None, request.FILES or None, instance=product)
@@ -240,6 +265,7 @@ def edit(request, id):
     return render(request, 'products/edit.html', {'formulary': formulary})
 
 # Vista para eliminar un producto
+@login_required
 def delete(request, id):
     product = Product.objects.get(id=id)
     product.delete()
