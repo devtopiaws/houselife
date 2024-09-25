@@ -44,5 +44,5 @@ a, a:hover {
 }
 
 .table-fixed thead {
-    width: calc(100% - 17px); /* Ajuste para evitar el desplazamiento de ancho */
+    width: calc(100% - 1px); /* Ajuste para evitar el desplazamiento de ancho */
 }

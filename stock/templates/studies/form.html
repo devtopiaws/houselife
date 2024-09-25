@@ -2,50 +2,50 @@
     {% csrf_token %}
 
     {% for campo in form %}
-    <div class="mb-3">
-        <label for="{{ campo.id_for_label }}" class="form-label">{{ campo.label }}:</label>
+        <div class="mb-3">
+            <label for="{{ campo.id_for_label }}" class="form-label">{{ campo.label }}:</label>
 
-        {% if campo.field.widget.input_type == 'file' and campo.value %}
-        <div class="mb-2">
-            <img src="{{ MEDIA_URL }}/images/{{ campo.value }}" alt="{{ campo.label }}" class="img-thumbnail" style="max-width: 150px;">
+            <!-- Campo de selección de producto -->
+            {% if campo.name == 'producto' %}
+            <select class="form-control" name="{{ campo.name }}" id="productoSelect" onchange="actualizarPrecioCompra()">
+                {% for producto in productos %}
+                <option value="{{ producto.id }}" data-precio="{{ producto.precio_compra }}" data-venta="{{ producto.precio_venta }}">{{ producto.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Campo de precio de compra -->
+            {% elif campo.name == 'precio_compra' %}
+            <input type="number" class="form-control" name="{{ campo.name }}" id="precioCompra" readonly />
+
+            <!-- Campo de IVA calculado (19%) -->
+            {% elif campo.name == 'iva' %}
+            <input type="number" class="form-control" name="{{ campo.name }}" id="iva" readonly />
+
+            <!-- Campo de valor del transporte ingresado manualmente -->
+            {% elif campo.name == 'transporte' %}
+            <input type="number" class="form-control" name="{{ campo.name }}" id="transporte" oninput="calcularTotal()" />
+
+            <!-- Campo de precio de venta ingresado manualmente -->
+            {% elif campo.name == 'precio_venta' %}
+            <input type="number" class="form-control" name="{{ campo.name }}" id="precioVenta" oninput="calcularGanancia()" />
+
+            <!-- Campo de total calculado automáticamente -->
+            {% elif campo.name == 'total' %}
+            <input type="number" class="form-control" name="{{ campo.name }}" id="total" readonly />
+
+            <!-- Campo de ganancia calculado automáticamente -->
+            {% elif campo.name == 'ganancia' %}
+            <input type="number" class="form-control" name="{{ campo.name }}" id="ganancia" readonly />
+
+            {% else %}
+            <!-- Otros campos del formulario -->
+            <input type="text" class="form-control" name="{{ campo.name }}" id="{{ campo.id_for_label }}" value="{{ campo.value | default:'' }}" />
+            {% endif %}
+
+            {% if campo.errors %}
+            <div class="form-text text-danger mt-1">{{ campo.errors }}</div>
+            {% endif %}
         </div>
-        {% endif %}
-
-        {% if campo.field.widget.input_type == 'text' %}
-        <input type="text" class="form-control" name="{{ campo.name }}"
-            id="{{ campo.id_for_label }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
-
-        {% elif campo.field.widget.input_type == 'number' %}
-        <input type="number" class="form-control" name="{{ campo.name }}"
-            id="{{ campo.id_for_label }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
-
-        {% elif campo.field.widget.input_type == 'email' %}
-        <input type="email" class="form-control" name="{{ campo.name }}"
-            id="{{ campo.id_for_label }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
-
-        {% elif campo.field.widget.input_type == 'date' %}
-        <input type="text" class="form-control" name="{{ campo.name }}"
-            id="{{ campo.id_for_label }}" placeholder="{{ campo.label }}" value="{{ campo.value | date:'d/m/Y' }}"
-            pattern="\d{2}/\d{2}/\d{4}" title="Formato: DD/MM/YYYY"
-            data-provide="datepicker" data-date-format="dd/mm/yyyy"/>
-
-        {% elif campo.field.widget.input_type == 'file' %}
-        <input type="file" class="form-control" name="{{ campo.name }}"
-            id="{{ campo.id_for_label }}" />
-
-        {% elif campo.field.widget.input_type == 'textarea' %}
-        <textarea class="form-control" name="{{ campo.name }}" id="{{ campo.id_for_label }}" rows="3" placeholder="{{ campo.label }}">{{ campo.value | default:'' }}</textarea>
-
-        {% else %}
-        <input type="text" class="form-control" name="{{ campo.name }}"
-            id="{{ campo.id_for_label }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
-
-        {% endif %}
-
-        {% if campo.errors %}
-        <div class="form-text text-danger mt-1">{{ campo.errors }}</div>
-        {% endif %}
-    </div>
     {% endfor %}
 
     <div class="text-end mt-3">
@@ -53,3 +53,41 @@
         <a class="btn btn-secondary ms-2" href="{% url 'study' %}" role="button">Cancelar</a>
     </div>
 </form>
+
+<script>
+    // Actualizar el campo de precio de compra y calcular IVA cuando se selecciona un producto
+    function actualizarPrecioCompra() {
+        const productoSelect = document.getElementById('productoSelect');
+        const precioCompra = document.getElementById('precioCompra');
+        const iva = document.getElementById('iva');
+        
+        const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+        const precio = parseFloat(selectedOption.getAttribute('data-precio'));
+        
+        precioCompra.value = precio;
+        iva.value = (precio * 0.19).toFixed(2); // IVA 19%
+
+        calcularTotal(); // Llamar la función para actualizar el total
+    }
+
+    // Calcular el total (precio compra + IVA + transporte)
+    function calcularTotal() {
+        const precioCompra = parseFloat(document.getElementById('precioCompra').value) || 0;
+        const iva = parseFloat(document.getElementById('iva').value) || 0;
+        const transporte = parseFloat(document.getElementById('transporte').value) || 0;
+        const total = document.getElementById('total');
+
+        total.value = (precioCompra + iva + transporte).toFixed(2);
+        
+        calcularGanancia(); // Llamar la función para actualizar la ganancia
+    }
+
+    // Calcular la ganancia ((precio compra + IVA + transporte) - precio venta)
+    function calcularGanancia() {
+        const total = parseFloat(document.getElementById('total').value) || 0;
+        const precioVenta = parseFloat(document.getElementById('precioVenta').value) || 0;
+        const ganancia = document.getElementById('ganancia');
+
+        ganancia.value = (precioVenta - total).toFixed(2);
+    }
+</script>
