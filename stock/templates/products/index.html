@@ -15,7 +15,7 @@
                 </svg> Agregar nuevo producto
             </a>
         </div>
-        <div class="card-body">
+
             <form method="GET" class="mb-4">
                 <div class="input-group">
                     <input type="text" name="q" class="form-control" placeholder="Buscar producto..." value="{{ request.GET.q }}">
@@ -88,7 +88,24 @@
                             <td>{{ product.category }}</td>
                             <td>{{ product.location }}</td>
                             <td>
-                                <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal{{ product.id }}">
+                                    <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
+                                </a>
+                            
+                                <!-- Modal para mostrar la imagen -->
+                                <div class="modal fade" id="imageModal{{ product.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ product.id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageModalLabel{{ product.id }}">{{ product.name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                             <td>{{ product.date|date:"d/m/Y" }}</td>
                             <td>
@@ -107,7 +124,7 @@
                 </table>
             </div>
 
-        </div>
+        
         <div class="card-footer text-muted text-center">
             &copy; {{ current_year }} HouseLife
         </div>

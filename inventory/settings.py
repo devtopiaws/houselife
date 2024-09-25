@@ -149,3 +149,12 @@ LOGIN_REDIRECT_URL = '/'  # Redirige a la página de inicio después de hacer lo
 LOGOUT_REDIRECT_URL = '/'  # Redirige a la página de inicio después de hacer logout
 LOGIN_URL = '/login/'
 
+# Expira la sesión después de 15 minutos de inactividad
+SESSION_COOKIE_AGE = 900  # 15 minutos (900 segundos)
+
+# Expira la sesión cuando se cierra el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Refresca el tiempo de sesión en cada solicitud (extiende el tiempo si hay actividad)
+SESSION_SAVE_EVERY_REQUEST = True
+
