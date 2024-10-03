@@ -25,9 +25,9 @@
 
         {% elif campo.field.widget.input_type == 'date' %}
         <input type="text" class="form-control" name="{{ campo.name }}"
-            id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | date:'d/m/Y' }}"
-            pattern="\d{2}/\d{2}/\d{4}" title="Formato: DD/MM/YYYY"
-            data-provide="datepicker" data-date-format="dd/mm/yyyy"/>
+        id="{{ campo.name }}" value="{{ campo.value | date:'d/m/Y' }}"
+        placeholder="{{ campo.label }}" pattern="\d{2}/\d{2}/\d{4}" title="Formato: dd/mm/yyyy"
+        data-provide="datepicker" data-date-format="dd/mm/yyyy"/>
             
 
         {% elif campo.field.widget.input_type == 'file' %}
