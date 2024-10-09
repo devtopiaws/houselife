@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Sincronizar Inventario{% endblock %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header">
+        <h4 class="card-title">Sincronización de Inventario con WooCommerce</h4>
+        <p class="card-subtitle text-muted">Lista de productos sincronizados con su inventario actual.</p>
+    </div>
+    <div class="card-body">
+        {% if productos %}
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Inventario Actual</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                        <tr>
+                            <td>{{ producto.name }}</td>
+                            <td>{{ producto.stock_quantity }}</td>
+                            <td>${{ producto.price }}</td>
+                            <td>{{ producto.status|title }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                No se encontraron productos en WooCommerce.
+            </div>
+        {% endif %}
+    </div>
+    <div class="card-footer text-muted">
+        Última sincronización: {{ last_sync_date|default:"No disponible" }}
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,16 @@
 <form enctype="multipart/form-data" method="post" class="container mt-4">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
+
+    <script>
+        $(document).ready(function() {
+            $('#id_date').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                todayHighlight: true
+            });
+        });
+    </script>
     {% csrf_token %}
 
     {% for campo in formulary %}
@@ -23,11 +35,9 @@
         <input type="email" class="form-control" name="{{ campo.name }}"
             id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | default:'' }}" />
 
-        {% elif campo.field.widget.input_type == 'date' %}
-        <input type="text" class="form-control" name="{{ campo.name }}"
-        id="{{ campo.name }}" value="{{ campo.value | date:'d/m/Y' }}"
-        placeholder="{{ campo.label }}" pattern="\d{2}/\d{2}/\d{4}" title="Formato: dd/mm/yyyy"
-        data-provide="datepicker" data-date-format="dd/mm/yyyy"/>
+            {% elif campo.field.widget.input_type == 'text' %}
+            <input type="text" class="form-control" name="{{ campo.name }}"
+                id="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ campo.value | date:'d/m/Y' }}" />
             
 
         {% elif campo.field.widget.input_type == 'file' %}
@@ -53,4 +63,5 @@
         <button class="btn btn-success" type="submit">Enviar información</button>
         <a class="btn btn-secondary ms-2" href="{% url 'products' %}" role="button">Cancelar</a>
     </div>
+   
 </form>

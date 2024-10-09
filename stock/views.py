@@ -10,6 +10,8 @@ from .forms import SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
+from .integrations.woocommerce import obtener_productos, actualizar_inventario_producto
+
 
 class VistaProtegida(LoginRequiredMixin, TemplateView):
     template_name = 'login.html'
@@ -36,6 +38,22 @@ def home(request):
 def about(request):
     return render(request,'pages/about.html')
 
+
+@login_required
+def sincronizar_inventario(request):
+    try:
+        productos = obtener_productos()
+        if productos:
+            for producto in productos:
+                print(f"Producto: {producto['name']}, Inventario: {producto['stock_quantity']}")
+                # Aquí podrías actualizar el inventario en tu modelo de Django si es necesario
+        else:
+            productos = []  # Asegúrate de que `productos` sea una lista vacía si no hay resultados
+    except Exception as e:
+        print(f"Error al sincronizar el inventario: {e}")
+        productos = []  # En caso de error, asegura que `productos` sea una lista vacía
+
+    return render(request, 'woocommerce/sincronizar_inventario.html', {'productos': productos})
 
 # Listado de estudios de mercado con búsqueda y paginación
 @login_required

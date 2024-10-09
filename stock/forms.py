@@ -47,9 +47,11 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = '__all__'
         widgets = {
-            'date': forms.DateInput(format='%d/%m/%Y', attrs={
-                'class': 'form-control', 
-                'placeholder': 'DD/MM/YYYY'
+            'date': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'DD/MM/YYYY',
+                'data-provide': 'datepicker',
+                'data-date-format': 'dd/mm/yyyy'
             }),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
