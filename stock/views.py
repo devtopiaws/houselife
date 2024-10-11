@@ -1,6 +1,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+import json
 from .models import Product, Customer, Supplier, MarketStudy
 from .forms import ProductForm, CustomerForm, SupplierForm, MarketStudyForm
 from django.db.models import Q
@@ -38,6 +39,38 @@ def home(request):
 def about(request):
     return render(request,'pages/about.html')
 
+@login_required
+def edit(request, id):
+    product = Product.objects.get(id=id)
+    formulary = ProductForm(request.POST or None, request.FILES or None, instance=product)
+    if formulary.is_valid() and request.POST:
+        producto_actualizado = formulary.save()
+        # Llama a la función para actualizar el inventario en WooCommerce
+        actualizar_inventario_producto(producto_actualizado.id, producto_actualizado.stock)
+        return redirect('products')
+    return render(request, 'products/edit.html', {'formulary': formulary})
+
+def woocommerce_webhook(request):
+    if request.method == 'POST':
+        payload = json.loads(request.body)
+        try:
+            for item in payload['line_items']:
+                product_id = item['product_id']
+                quantity = item['quantity']
+
+                # Busca el producto en tu aplicación Django basado en el ID de WooCommerce
+                producto_local = Product.objects.filter(id=product_id).first()
+
+                if producto_local:
+                    # Resta la cantidad vendida del inventario local
+                    producto_local.stock -= quantity
+                    producto_local.save()
+
+            return JsonResponse({'status': 'success'}, status=200)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    else:
+        return JsonResponse({'status': 'method not allowed'}, status=405)
 
 @login_required
 def sincronizar_inventario(request):

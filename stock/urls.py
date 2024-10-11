@@ -31,6 +31,8 @@ urlpatterns = [
     path('studies/<int:id>/edit/', views.edit_study, name='edit_study'),
     path('studies/<int:id>/delete/', views.delete_study, name='delete_study'),
     path('sincronizar_inventario/', views.sincronizar_inventario, name='sincronizar_inventario'),
+    path('webhook/woocommerce/', views.woocommerce_webhook, name='woocommerce_webhook'),
+    
 
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
