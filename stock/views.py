@@ -11,7 +11,9 @@ from .forms import SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
-from .integrations.woocommerce import obtener_productos, actualizar_inventario_producto
+from .integrations.woocommerce import obtener_productos, actualizar_inventario_producto, actualizar_inventario_en_woocommerce
+from .models import Product  # Importa el modelo Product de Django
+
 
 
 class VistaProtegida(LoginRequiredMixin, TemplateView):
@@ -72,21 +74,56 @@ def woocommerce_webhook(request):
     else:
         return JsonResponse({'status': 'method not allowed'}, status=405)
 
+# Sincronizacion del invenario de house life con la app de inventario
 @login_required
 def sincronizar_inventario(request):
     try:
-        productos = obtener_productos()
-        if productos:
-            for producto in productos:
-                print(f"Producto: {producto['name']}, Inventario: {producto['stock_quantity']}")
-                # Aquí podrías actualizar el inventario en tu modelo de Django si es necesario
+        productos_woocommerce = obtener_productos()
+        # print(f"Productos obtenidos de WooCommerce: {productos_woocommerce}")
+
+        productos_actualizados = []
+        productos_con_stock_django = {}  # Diccionario para almacenar el stock de Django por nombre de producto
+
+        if productos_woocommerce:
+            for producto_wc in productos_woocommerce:
+                nombre_producto_wc = producto_wc['name'].strip()
+                stock_producto_wc = producto_wc['stock_quantity']
+                # print(f"Producto en WooCommerce: {nombre_producto_wc}, Stock: {stock_producto_wc}")
+
+                # Busca el producto en Django por nombre exacto (ignora mayúsculas/minúsculas)
+                producto_django = Product.objects.filter(name__iexact=nombre_producto_wc).first()
+
+                if producto_django:
+                    # print(f"Producto encontrado en Django: {producto_django.name}, Stock: {producto_django.stock}")
+                    productos_con_stock_django[producto_wc['name']] = producto_django.stock  # Asigna el stock de Django
+                    if producto_django.stock != stock_producto_wc:
+                        producto_django.stock = stock_producto_wc
+                        producto_django.save()
+                        productos_actualizados.append(producto_django)
+                        print(f"Producto {producto_django.name} actualizado en Django")
+                else:
+                    # print(f"Producto {nombre_producto_wc} no encontrado en la base de datos de Django")
+                    pass
+
         else:
-            productos = []  # Asegúrate de que `productos` sea una lista vacía si no hay resultados
+            print("No se encontraron productos en WooCommerce.")
+            productos_woocommerce = []
+
     except Exception as e:
         print(f"Error al sincronizar el inventario: {e}")
-        productos = []  # En caso de error, asegura que `productos` sea una lista vacía
+        productos_woocommerce = []
 
-    return render(request, 'woocommerce/sincronizar_inventario.html', {'productos': productos})
+    # Paginación de productos (10 productos por página)
+    paginator = Paginator(productos_woocommerce, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'woocommerce/sincronizar_inventario.html', {
+        'page_obj': page_obj,
+        'productos_actualizados': productos_actualizados,
+        'productos_con_stock_django': productos_con_stock_django  # Pasamos el diccionario de stock de Django
+    })
+
 
 # Listado de estudios de mercado con búsqueda y paginación
 @login_required

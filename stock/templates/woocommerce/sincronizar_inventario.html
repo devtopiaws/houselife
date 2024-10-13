@@ -1,43 +1,94 @@
 {% extends "base.html" %}
 
+{% load custom_filters %}
+
 {% block title %}Sincronizar Inventario{% endblock %}
 
 {% block content %}
-<div class="card mt-4">
-    <div class="card-header">
-        <h4 class="card-title">Sincronización de Inventario con WooCommerce</h4>
-        <p class="card-subtitle text-muted">Lista de productos sincronizados con su inventario actual.</p>
-    </div>
-    <div class="card-body">
-        {% if productos %}
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Inventario Actual</th>
-                        <th>Precio</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for producto in productos %}
-                        <tr>
-                            <td>{{ producto.name }}</td>
-                            <td>{{ producto.stock_quantity }}</td>
-                            <td>${{ producto.price }}</td>
-                            <td>{{ producto.status|title }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                No se encontraron productos en WooCommerce.
+<h3>Productos en WooCommerce</h3>
+
+{% if page_obj %}
+
+    <!-- Formulario de búsqueda y paginación en la misma fila -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Formulario de búsqueda -->
+        <form method="GET" class="d-flex align-items-center">
+            <div class="input-group input-group-sm">
+                <input type="text" name="q" class="form-control form-control-sm" placeholder="Buscar producto..." value="{{ request.GET.q }}">
+                <button class="btn btn-outline-primary" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                </button>
             </div>
-        {% endif %}
+        </form>
+
+        <!-- Paginación -->
+        <nav aria-label="Paginación de productos">
+            <ul class="pagination pagination-sm mb-0">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Primero</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Anterior</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Siguiente</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Último</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
-    <div class="card-footer text-muted">
-        Última sincronización: {{ last_sync_date|default:"No disponible" }}
-    </div>
-</div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Stock en WooCommerce</th>
+                <th>Stock en App Administradora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in page_obj %}
+            <tr>
+                <td>{{ producto.name }}</td>
+                <td>{{ producto.stock_quantity }}</td>
+                <td>
+                    {% if productos_con_stock_django|get_item:producto.name %}
+                    {{ productos_con_stock_django|get_item:producto.name }}
+                    {% else %}
+                        No encontrado
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% else %}
+    <p>No se encontraron productos en WooCommerce.</p>
+{% endif %}
+
+<h3>Productos actualizados en App Administradora</h3>
+{% if productos_actualizados %}
+    <ul>
+        {% for producto in productos_actualizados %}
+        <li>{{ producto.name }}: Stock actualizado a {{ producto.stock }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No se han actualizado productos.</p>
+{% endif %}
+    
 {% endblock %}
