@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %} Lista de productos {% endblock %}
+{% block title %}Lista de Productos{% endblock %}
 
 {% block content %} 
 
-<div class="container-fluid mt-4">
+<div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Lista de Productos</h5>
@@ -58,78 +58,75 @@
             </nav>
         </div>
 
-            <div class="table-responsive">
-                <table class="table table-striped table-hover w-100">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Codigo Proveedor</th>
-                            <th>Nombre Proveedor</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio Compra</th>
-                            <th>Precio Venta</th>
-                            <th>Precio Cliente</th>
-                            <th>Stock</th>
-                            <th>Categoría</th>
-                            <th>Ubicación</th>
-                            <th>Imagen</th>
-                            <th>Fecha de creación</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for product in page_obj %}
-                        <tr>
-                            <td>{{ product.id }}</td>
-                            <td>{{ product.cod_supplier }}</td>
-                            <td>{{ product.supplier }}</td>
-                            <td>{{ product.name }}</td>
-                            <td>{{ product.description }}</td>
-                            <td>${{ product.price }}</td>
-                            <td>${{ product.price_sell }}</td>
-                            <td>${{ product.market_price }}</td>
-                            <td>{{ product.stock }}</td>
-                            <td>{{ product.category }}</td>
-                            <td>{{ product.location }}</td>
-                            <td>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal{{ product.id }}">
-                                    <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" style="max-height: 80px; object-fit: cover;" />
-                                </a>
-                            
-                                <!-- Modal para mostrar la imagen -->
-                                <div class="modal fade" id="imageModal{{ product.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ product.id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="imageModalLabel{{ product.id }}">{{ product.name }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" />
-                                            </div>
+        <!-- Tabla de productos -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover w-100">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Código Proveedor</th>
+                        <th>Nombre Proveedor</th>
+                        <th>Nombre</th>
+                        <th style="max-width: 200px;">Descripción</th>
+                        <th>Precio Compra</th>
+                        <th>Precio Venta</th>
+                        <th>Stock</th>
+                        <th>Categoría</th>
+                        <th>Imagen</th>
+                        <th>Fecha de creación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in page_obj %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.cod_supplier }}</td>
+                        <td>{{ product.supplier }}</td>
+                        <td>{{ product.name }}</td>
+                        <td class="text-truncate" style="max-width: 200px;">{{ product.description }}</td>
+                        <td>${{ product.price }}</td>
+                        <td>${{ product.price_sell }}</td>
+                        <td>{{ product.stock }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>
+                            <!-- Botón "Ver" para mostrar la imagen en un modal -->
+                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#imageModal{{ product.id }}">
+                                Ver
+                            </button>
+
+                            <!-- Modal para mostrar la imagen -->
+                            <div class="modal fade" id="imageModal{{ product.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ product.id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="imageModalLabel{{ product.id }}">{{ product.name }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img src="{{ product.image.url }}" alt="Imagen de {{ product.name }}" class="img-fluid" />
                                         </div>
                                     </div>
                                 </div>
-                            </td>
-                            <td>{{ product.date|default:''|date:"d/m/Y" }}</td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <a class="btn btn-info btn-sm" href="{% url 'edit' product.id %}" role="button">Editar</a>
-                                    <a class="btn btn-danger btn-sm" href="{% url 'delete' product.id %}" role="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Borrar</a>
-                                </div>
-                            </td>                            
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="13" class="text-center">No hay productos disponibles</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        </td>
+                        <td>{{ product.date|default:''|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a class="btn btn-info btn-sm" href="{% url 'edit' product.id %}" role="button">Editar</a>
+                                <a class="btn btn-danger btn-sm" href="{% url 'delete' product.id %}" role="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?');">Borrar</a>
+                            </div>
+                        </td>                            
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="13" class="text-center">No hay productos disponibles</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-        
         <div class="card-footer text-muted text-center">
             &copy; {{ current_year }} HouseLife
         </div>

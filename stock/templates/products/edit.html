@@ -1,20 +1,48 @@
 {% extends "base.html" %}
 
-{% block title %} Editar producto {% endblock %}
+{% block title %} Editar Producto {% endblock %}
 
-{% block content %} 
-
-<div class="card">
-    <div class="card-header">
-        Editar información del producto
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            Editar información del producto
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Datos del producto</h4>
+            
+            {% include 'products/form.html' %}
+            
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }} <!-- Esto genera automáticamente el formulario con el estilo especificado en el form -->
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+        </div>
     </div>
-    <div class="card-body">
-        <h4 class="card-title">Datos del producto</h4>
-        
-        {% include 'products/form.html' %}
-        
-    </div>
-    <div class="card-footer text-muted"></div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateField = document.querySelector('input[name="date"]');
+        if (dateField && dateField.value) {
+            const dateValue = new Date(dateField.value); // Convierte el valor del campo de fecha a un objeto Date
+            
+            if (!isNaN(dateValue)) {
+                // Formatea la fecha a DD/MM/YYYY
+                const day = String(dateValue.getDate()).padStart(2, '0');
+                const month = String(dateValue.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript empiezan desde 0
+                const year = dateValue.getFullYear();
+                
+                dateField.value = `${day}/${month}/${year}`;
+            }
+        }
+
+        // Añade un patrón para validar el formato de la fecha cuando el usuario ingresa manualmente
+        dateField.setAttribute('pattern', '\\d{2}/\\d{2}/\\d{4}');
+        dateField.setAttribute('title', 'Formato: DD/MM/YYYY');
+    });
+</script>
 {% endblock %}

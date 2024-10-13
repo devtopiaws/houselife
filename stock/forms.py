@@ -47,25 +47,24 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = '__all__'
         widgets = {
-            'date': forms.TextInput(attrs={
+            'date': forms.DateInput(format='%d/%m/%Y', attrs={
                 'class': 'form-control',
-                'placeholder': 'DD/MM/YYYY',
-                'data-provide': 'datepicker',
-                'data-date-format': 'dd/mm/yyyy'
+                'placeholder': 'DD/MM/YYYY', 
+                'type': 'text'  # Cambia a 'text' para evitar que el navegador use su formato predeterminado
             }),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'price_sell': forms.NumberInput(attrs={'class': 'form-control'}),
             'market_price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'link': forms.URLInput(attrs={'class': 'form-control'}),  # Cambio aquí para URLInput si es un link.
+            'link': forms.TextInput(attrs={'class': 'form-control'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),  # Podrías usar un Select si es un campo de elección.
-            'subcategory': forms.Select(attrs={'class': 'form-control'}),
+            'category': forms.TextInput(attrs={'class': 'form-control'}),
+            'subcategory': forms.TextInput(attrs={'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'location': forms.TextInput(attrs={'class': 'form-control'}),
         }
-    
+
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.fields['date'].input_formats = ['%d/%m/%Y']  # Asegurarse de que el formato coincida con el widget.
+        self.fields['date'].input_formats = ['%d/%m/%Y']  # Especifica el formato de la fecha

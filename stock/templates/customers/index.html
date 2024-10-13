@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Lista de Clientes {% endblock %}
+{% block title %}Lista de Clientes{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
@@ -16,10 +16,7 @@
         </div>
         <div class="card-body">
 
-
             <!-- Formulario de búsqueda -->
-
-
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <!-- Formulario de búsqueda de clientes -->
                 <form method="GET" class="d-flex align-items-center">
@@ -60,6 +57,8 @@
                     </ul>
                 </nav>
             </div>
+
+            <!-- Tabla de clientes -->
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead class="table-dark">
@@ -89,11 +88,9 @@
                             <td>
                                 <div class="d-flex gap-2">
                                     <a class="btn btn-info btn-sm" href="{% url 'edit_customer' customer.id %}" role="button">
-                                        <!-- Icono de editar -->
                                         Editar
                                     </a>
                                     <a class="btn btn-danger btn-sm" href="{% url 'delete_customer' customer.id %}" role="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este cliente?');">
-                                        <!-- Icono de borrar -->
                                         Borrar
                                     </a>
                                 </div>

@@ -144,7 +144,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Formato de fecha para todo el proyecto
 DATE_FORMAT = 'd/m/Y'
-USE_L10N = False
+USE_L10N = False  # Desactiva la localización automática
 
 LOGIN_REDIRECT_URL = '/'  # Redirige a la página de inicio después de hacer login
 LOGOUT_REDIRECT_URL = '/'  # Redirige a la página de inicio después de hacer logout
