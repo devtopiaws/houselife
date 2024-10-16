@@ -38,7 +38,7 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" >
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                 <img src="{% static 'images/LogoHouseLife.png' %}" alt="HouseLife Logo" width="100" height="50" class="d-inline-block align-text-top me-2">
@@ -50,26 +50,26 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}" aria-current="page">Inicio</a>
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}" aria-current="page">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about' %}">Nosotros</a>
+                        <a class="nav-link {% if '/about/' in request.path %}active{% endif %}" href="{% url 'about' %}">Nosotros</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'products' %}">Productos</a>
+                            <a class="nav-link {% if '/products/' in request.path %}active{% endif %}" href="{% url 'products' %}">Productos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'customer' %}">Clientes</a>
+                            <a class="nav-link {% if '/customer/' in request.path %}active{% endif %}" href="{% url 'customer' %}">Clientes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'supplier' %}">Proveedores</a>
+                            <a class="nav-link {% if '/supplier/' in request.path %}active{% endif %}" href="{% url 'supplier' %}">Proveedores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'study' %}">Estudio de mercado</a>
+                            <a class="nav-link {% if '/study/' in request.path %}active{% endif %}" href="{% url 'study' %}">Estudio de mercado</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'sincronizar_inventario' %}">Inventario</a>
+                            <a class="nav-link {% if '/sincronizar_inventario/' in request.path %}active{% endif %}" href="{% url 'sincronizar_inventario' %}">Inventario</a>
                         </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}">
@@ -79,13 +79,15 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+                            <a class="nav-link {% if '/login/' in request.path %}active{% endif %}" href="{% url 'login' %}">Iniciar Sesión</a>
                         </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
+    
+    
 
     <!-- Main content -->
     <main role="main" class="container mt-4 content">
@@ -96,6 +98,7 @@
         </div>
     </main>
 
+    
     <!-- Footer -->
     <footer class="bg-light text-center py-4 mt-auto">
         <p class="mb-0">&copy; 2024 HouseLife. Todos los derechos reservados.</p>
@@ -105,6 +108,7 @@
             </a>
         </p>
     </footer>
+
 
     <!-- Bootstrap JavaScript Libraries -->
     <script
